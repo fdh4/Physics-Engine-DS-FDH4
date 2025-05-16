@@ -10,8 +10,21 @@
 //     The code is written in JavaScript and uses the requestAnimationFrame function to create a smooth animation.
 
 
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext("2d");
 
+function drawBall(x, y, r) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+    ctx.fillStyle = "purple";
+    ctx.fill();
+}
 
+drawBall(100, 100, 20);
+drawBall(200, 200, 30);
+drawBall(300, 300, 40);
 
 // const canvas = document.querySelector("canvas");
 // const ctx = canvas.getContext("2d");
@@ -268,6 +281,5 @@
 //   //    console.log("f => RIGHT");
 //   //   x++;
 //   //   }
-
 
 

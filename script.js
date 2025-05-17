@@ -1,7 +1,7 @@
 
 
 // Physics Engine according to Dan Stuts YouTube playlist "Physics Engine in from Scratch"
-//         Accesed 05/15/2025
+//         Accessed 05/15/2025
 //         https://www.youtube.com/watch?v=2Vo_fZ_28gQ&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=2
 
 //     Prior attempts are appended as a comment at the end of the code in LIFO order.
@@ -22,9 +22,60 @@ function drawBall(x, y, r) {
     ctx.fill();
 }
 
-drawBall(100, 100, 20);
-drawBall(200, 200, 30);
-drawBall(300, 300, 40);
+// canvas.focus();         // this is the only way I could get the canvas to focus.
+// canvas.tabIndex = 0;    // however, using 'tabIndex=0' does not fix the problem.
+
+canvas.addEventListener('keydown', function(e) {
+    if(e.keyCode === 37){console.log("LEFT");}
+    if(e.keyCode === 38){console.log("UP");}
+    if(e.keyCode === 39){console.log("RIGHT");}
+    if(e.keyCode === 40){console.log("DOWN");}
+    
+                        // Note that 'keycode' is deprecated.  
+                        // Here is an alternative approach using the 'key' property.
+                        // 
+                        //       let fdhCharcode = e.key.charCodeAt();
+                        //       console.log("fdhCharcode =", fdhCharcode);
+                        // 
+})
+
+drawBall(100, 100, 10);
+drawBall(200, 200, 20);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ***************             End of code for attempt 2.12.             ******************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // const canvas = document.querySelector("canvas");
 // const ctx = canvas.getContext("2d");
@@ -217,7 +268,7 @@ drawBall(300, 300, 40);
 
 
 
-// //
+// //   scratch code
 //     // console.log("fdhIcode =", fdhIcode);
 //     //  console.log(fdhIcode);
 

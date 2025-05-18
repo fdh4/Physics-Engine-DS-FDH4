@@ -66,13 +66,15 @@ function move()
         if(DOWN){y++;}
     }
 
-setInterval(function() 
+function mainLoop()
     {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);   // code on video uses
-    move();                                             // 'canvas.clientWidth' and 'canvas.clientHeight'
-    drawBall(x, y, 15);                                 // as arguments for cxt.clearRect().
-    }, 1000/60); // 60 FPS
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        move(); 
+        drawBall(x, y, 15);
+        requestAnimationFrame(mainLoop);
+    }
 
+requestAnimationFrame(mainLoop);
 
 
 

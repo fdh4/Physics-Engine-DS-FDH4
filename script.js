@@ -16,6 +16,8 @@ const ctx = canvas.getContext("2d");
 let x = 100;
 let y = 100;
 
+let LEFT, UP, RIGHT, DOWN;
+
 function drawBall(x, y, r) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -29,10 +31,10 @@ function drawBall(x, y, r) {
 // canvas.tabIndex = 0;    // however, using 'tabIndex=0' does not fix the problem.
 
 canvas.addEventListener('keydown', function(e) {
-    if(e.keyCode === 37){x--;}
-    if(e.keyCode === 38){y--;}
-    if(e.keyCode === 39){x++;}
-    if(e.keyCode === 40){y++;}
+    if(e.keyCode === 37){LEFT = true;}
+    if(e.keyCode === 38){UP = true}
+    if(e.keyCode === 39){RIGHT = true;}
+    if(e.keyCode === 40){DOWN = true;}
     
                         // Note that 'e.keycode' is deprecated.  
                         // Here is an alternative approach using the 'key' property.
@@ -42,12 +44,34 @@ canvas.addEventListener('keydown', function(e) {
                         // 
 })
 
+canvas.addEventListener('keyup', function(e) {
+    if(e.keyCode === 37){LEFT = false;}
+    if(e.keyCode === 38){UP = false}
+    if(e.keyCode === 39){RIGHT = false;}
+    if(e.keyCode === 40){DOWN = false;}
+    
+                        // Note that 'e.keycode' is deprecated.  
+                        // Here is an alternative approach using the 'key' property.
+                        // 
+                        //       let fdhCharcode = e.key.charCodeAt();
+                        //       console.log("fdhCharcode =", fdhCharcode);
+                        // 
+})
+
+function move()
+    {
+        if(LEFT){x--;}
+        if(UP){y--;}
+        if(RIGHT){x++;}
+        if(DOWN){y++;}
+    }
 
 setInterval(function() 
     {
     ctx.clearRect(0, 0, canvas.width, canvas.height);   // code on video uses
-    drawBall(x, y, 15);                                 // 'canvas.clientWidth' and 'canvas.clientHeight'
-    }, 1000/60); // 60 FPS                              // as arguments for cxt.clearRect().
+    move();                                             // 'canvas.clientWidth' and 'canvas.clientHeight'
+    drawBall(x, y, 15);                                 // as arguments for cxt.clearRect().
+    }, 1000/60); // 60 FPS
 
 
 

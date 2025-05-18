@@ -44,37 +44,8 @@ canvas.addEventListener('keydown', function(e) {
                         // 
 })
 
-canvas.addEventListener('keyup', function(e) {
-    if(e.keyCode === 37){LEFT = false;}
-    if(e.keyCode === 38){UP = false}
-    if(e.keyCode === 39){RIGHT = false;}
-    if(e.keyCode === 40){DOWN = false;}
-    
-                        // Note that 'e.keycode' is deprecated.  
-                        // Here is an alternative approach using the 'key' property.
-                        // 
-                        //       let fdhCharcode = e.key.charCodeAt();
-                        //       console.log("fdhCharcode =", fdhCharcode);
-                        // 
-})
 
-function move()
-    {
-        if(LEFT){x--;}
-        if(UP){y--;}
-        if(RIGHT){x++;}
-        if(DOWN){y++;}
-    }
 
-function mainLoop()
-    {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        move(); 
-        drawBall(x, y, 15);
-        requestAnimationFrame(mainLoop);
-    }
-
-requestAnimationFrame(mainLoop);
 
 
 

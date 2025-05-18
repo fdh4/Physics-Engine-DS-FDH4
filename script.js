@@ -7,11 +7,14 @@
 //     Prior attempts are appended as a comment at the end of the code in LIFO order.
 //     The code is a simple physics engine that simulates bouncing balls in a 2D space.
 //     The code uses HTML5 canvas to render the balls and their movements.
-//     The code is written in JavaScript and uses the requestAnimationFrame function to create a smooth animation.
+//     The code is written in JavaScript and uses the 'requestAnimationFrame' function to create a smooth animation.
 
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext("2d");
+
+let x = 100;
+let y = 100;
 
 function drawBall(x, y, r) {
     ctx.beginPath();
@@ -26,12 +29,12 @@ function drawBall(x, y, r) {
 // canvas.tabIndex = 0;    // however, using 'tabIndex=0' does not fix the problem.
 
 canvas.addEventListener('keydown', function(e) {
-    if(e.keyCode === 37){console.log("LEFT");}
-    if(e.keyCode === 38){console.log("UP");}
-    if(e.keyCode === 39){console.log("RIGHT");}
-    if(e.keyCode === 40){console.log("DOWN");}
+    if(e.keyCode === 37){x--;}
+    if(e.keyCode === 38){y--;}
+    if(e.keyCode === 39){x++;}
+    if(e.keyCode === 40){y++;}
     
-                        // Note that 'keycode' is deprecated.  
+                        // Note that 'e.keycode' is deprecated.  
                         // Here is an alternative approach using the 'key' property.
                         // 
                         //       let fdhCharcode = e.key.charCodeAt();
@@ -39,8 +42,14 @@ canvas.addEventListener('keydown', function(e) {
                         // 
 })
 
-drawBall(100, 100, 10);
-drawBall(200, 200, 20);
+
+setInterval(function() 
+    {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);   // code on video uses
+    drawBall(x, y, 15);                                 // 'canvas.clientWidth' and 'canvas.clientHeight'
+    }, 1000/60); // 60 FPS                              // as arguments for cxt.clearRect().
+
+
 
 
 

@@ -1,10 +1,10 @@
 
 
-// Physics Engine according to Dan Stuts YouTube playlist "Physics Engine in from Scratch"
+//         Physics Engine according to Dan Stuts YouTube playlist "Physics Engine in from Scratch"
 //         Accessed 05/15/2025
 //         https://www.youtube.com/watch?v=2Vo_fZ_28gQ&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=2
 
-//     Prior attempts are appended as a comment at the end of the code in LIFO order.
+//     Prior failed attempts comprise comments after code in most recent on top order.
 //     The code is a simple physics engine that simulates bouncing balls in a 2D space.
 //     The code uses HTML5 canvas to render the balls and their movements.
 //     The code is written in JavaScript and uses the 'requestAnimationFrame' function to create a smooth animation.
@@ -13,24 +13,31 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext("2d");
 
-let x = 100;
-let y = 100;
-
 let LEFT, UP, RIGHT, DOWN;
 
-function drawBall(x, y, r) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.strokeStyle = "black";
-    ctx.stroke();
-    ctx.fillStyle = "purple";
-    ctx.fill();
+class Ball {
+    constructor(x, y, r)
+    {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+    }
+  
+    drawBall()
+    {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+        ctx.fillStyle = "purple";
+        ctx.fill();
+    }
+
 }
 
-// canvas.focus();         // this is the only way I could get the canvas to focus.
-// canvas.tabIndex = 0;    // however, using 'tabIndex=0' does not fix the problem.
-
-canvas.addEventListener('keydown', function(e) {
+function keyControl(b)
+{
+    canvas.addEventListener('keydown', function(e) {
     if(e.keyCode === 37){LEFT = true;}
     if(e.keyCode === 38){UP = true}
     if(e.keyCode === 39){RIGHT = true;}
@@ -58,21 +65,28 @@ canvas.addEventListener('keyup', function(e) {
                         // 
 })
 
-function move()
-    {
-        if(LEFT){x--;}
-        if(UP){y--;}
-        if(RIGHT){x++;}
-        if(DOWN){y++;}
-    }
+    if (LEFT){b.x--;}
+    if (UP){b.y--;}
+    if (RIGHT){b.x++;}
+    if (DOWN){b.y++;}
+
+    
+}
+
+
 
 function mainLoop()
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        move(); 
-        drawBall(x, y, 15);
+        keyControl(Ball2); 
+        Ball1.drawBall();
+        Ball2.drawBall();
         requestAnimationFrame(mainLoop);
     }
+
+let Ball1 = new Ball(100, 100, 15);
+// let Ball1 = new Ball(canvas.width/2, canvas.height/2, 15);
+let Ball2 = new Ball(150, 150, 10);
 
 requestAnimationFrame(mainLoop);
 

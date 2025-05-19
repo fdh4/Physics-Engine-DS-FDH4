@@ -15,7 +15,7 @@ const ctx = canvas.getContext("2d");
 
 let LEFT, UP, RIGHT, DOWN;
 
-class Ball {
+class Ball {                        // *** class Ball Begin ***
     constructor(x, y, r)
     {
         this.x = x;
@@ -37,11 +37,12 @@ class Ball {
 
 function keyControl(b)
 {
-    canvas.addEventListener('keydown', function(e) {
-    if(e.keyCode === 37){LEFT = true;}
-    if(e.keyCode === 38){UP = true}
-    if(e.keyCode === 39){RIGHT = true;}
-    if(e.keyCode === 40){DOWN = true;}
+    canvas.addEventListener('keydown', function(e)
+        {
+            if(e.keyCode === 37){LEFT = true;}
+            if(e.keyCode === 38){UP = true}
+            if(e.keyCode === 39){RIGHT = true;}
+            if(e.keyCode === 40){DOWN = true;}
     
                         // Note that 'e.keycode' is deprecated.  
                         // Here is an alternative approach using the 'key' property.
@@ -49,21 +50,15 @@ function keyControl(b)
                         //       let fdhCharcode = e.key.charCodeAt();
                         //       console.log("fdhCharcode =", fdhCharcode);
                         // 
-})
+    })
 
-canvas.addEventListener('keyup', function(e) {
-    if(e.keyCode === 37){LEFT = false;}
-    if(e.keyCode === 38){UP = false}
-    if(e.keyCode === 39){RIGHT = false;}
-    if(e.keyCode === 40){DOWN = false;}
-    
-                        // Note that 'e.keycode' is deprecated.  
-                        // Here is an alternative approach using the 'key' property.
-                        // 
-                        //       let fdhCharcode = e.key.charCodeAt();
-                        //       console.log("fdhCharcode =", fdhCharcode);
-                        // 
-})
+    canvas.addEventListener('keyup', function(e)    
+        {
+            if(e.keyCode === 37){LEFT = false;}
+            if(e.keyCode === 38){UP = false}
+            if(e.keyCode === 39){RIGHT = false;}
+            if(e.keyCode === 40){DOWN = false;}
+    })
 
     if (LEFT){b.x--;}
     if (UP){b.y--;}
@@ -71,7 +66,8 @@ canvas.addEventListener('keyup', function(e) {
     if (DOWN){b.y++;}
 
     
-}
+}                                   // *** ball Class End ***
+
 
 
 
@@ -85,7 +81,7 @@ function mainLoop()
     }
 
 let Ball1 = new Ball(100, 100, 15);
-// let Ball1 = new Ball(canvas.width/2, canvas.height/2, 15);
+                                    // let Ball1 = new Ball(canvas.width/2, canvas.height/2, 15);
 let Ball2 = new Ball(150, 150, 10);
 
 requestAnimationFrame(mainLoop);

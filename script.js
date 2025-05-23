@@ -29,7 +29,7 @@ class Ball {                        // *** class Ball Begin ***
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.strokeStyle = "black";
         ctx.stroke();
-        ctx.fillStyle = "purple";
+        ctx.fillStyle = "yellow";
         ctx.fill();
     }
 
@@ -67,9 +67,6 @@ function keyControl(b)
 
     
 }                                   // *** ball Class End ***
-
-
-
 
 function mainLoop()
     {

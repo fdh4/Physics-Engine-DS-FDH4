@@ -4,7 +4,7 @@
 //         Accessed 05/15/2025
 //         https://www.youtube.com/watch?v=2Vo_fZ_28gQ&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=2
 
-//     Prior failed attempts comprise comments after code in most recent on top order.
+//     Prior failed attempts can be found in the comments tat follow the code in a most recent on top order.
 //     The code is a simple physics engine that simulates bouncing balls in a 2D space.
 //     The code uses HTML5 canvas to render the balls and their movements.
 //     The code is written in JavaScript and uses the 'requestAnimationFrame' function to create a smooth animation.
@@ -29,7 +29,7 @@ class Ball {                        // *** class Ball Begin ***
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.strokeStyle = "black";
         ctx.stroke();
-        ctx.fillStyle = "yellow";
+        ctx.fillStyle = "purple";
         ctx.fill();
     }
 
@@ -68,6 +68,9 @@ function keyControl(b)
     
 }                                   // *** ball Class End ***
 
+
+
+
 function mainLoop()
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -97,7 +100,7 @@ requestAnimationFrame(mainLoop);
 
 
 
-// code executes as expeted.  Coded up to Video 3 at 6:18
+
 
 // ***************             End of code for attempt 2.12.             ******************
 

@@ -1,0 +1,37 @@
+const canvas = document.querySelector("canvas");
+const drawA = canvas.getContext("2d");
+
+function drawBall(x,y,r,fillColor,strokeColor)
+    {
+    drawA.beginPath();
+
+    drawA.arc(x, y, r, 0, Math.PI * 2);
+
+    if (strokeColor == undefined)
+        { strokeColor = "black"; }
+        
+    if (fillColor == undefined)
+        { fillColor = "red"; }
+
+    drawA.strokeStyle = strokeColor;
+    drawA.stroke();
+
+    drawA.fillStyle = fillColor;
+    drawA.fill();
+    }
+
+    drawBall(100,100,50,"darkblue","yellow");
+    drawBall(300,100,10);
+
+/*  drawBall(200,200,40,"darkgreen","pink");
+    drawBall(300,300,30,"purple","cyan");
+    drawBall(400,400,10,"orange","black");
+    drawBall(350,350,20,"magenta","gray");
+    drawBall(450,450,5,"brown","white");
+ */
+
+
+
+
+
+

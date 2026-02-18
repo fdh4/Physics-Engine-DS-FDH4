@@ -1,0 +1,78 @@
+<!--  Physics Engine according to Dan Stuts' YouTube playlist "Physics Engine in from Scratch"
+        Accessed 05/15/2025
+        https://www.youtube.com/watch?v=2Vo_fZ_28gQ&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=2
+
+    Prior attempts are appended as comment blocks at the end of the active code.
+    The topmost comment block of code is the most recent working version.
+    The code is a simple physics engine that simulates bouncing balls in a 2D space.
+    The code uses HTML5 canvas to render the balls and their movements.
+    The code is written in JavaScript and uses the requestAnimationFrame() function to create smooth animation.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    #canvas {
+      border: 3px solid #f0dd36;
+      display: block;
+      margin: 7em auto;
+      background: #85cdfa;
+    }
+  </style>
+
+<title>FDH4 Physics Engine</title>
+
+</head>
+
+<body>
+
+  <canvas id="canvas" tabindex="0" width="640" height="480"></canvas>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Let's Bounce!</title>
+  <style>
+    #canvas{
+      border: 1px solid black;
+      display: block;
+      margin: 50px 10px 20px 10px;
+      background: #fffacc;
+    }
+  
+   * h1 {text-align: center;
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      }
+
+    h2 {text-align: center;
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-style:italic;
+      } 
+  </style>
+</head>
+<body>
+
+   <h1>Space:  The Last Frontier</h1>
+
+  <h2>A Statistical Mechanics Physics Engine!</h2>
+
+  <canvas id="canvas" tab=0 width="640" height="480" ></canvas>
+
+  <script src="script.js"></script>
+  
+</body>
+</html>
+
+ -->

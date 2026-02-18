@@ -1,378 +1,199 @@
+/*
+    2D Physics Engine from Scratch (JS)
+    Video 07 - Ball Ball Collisions
+    https://www.youtube.com/watch?v=Bd-8Vk8krog
+    This is the final code for video 07
+*/
+const canvas = document.querySelector("canvas");
+const drawA = canvas.getContext("2d");
 
+const BALLZ = [];
 
-//         Physics Engine according to Dan Stuts YouTube playlist "Physics Engine in from Scratch"
-//         Accessed 05/15/2025
-//         https://www.youtube.com/watch?v=2Vo_fZ_28gQ&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=2
+let Left = false, Right = false, Up = false, Down = false;
 
-//     Prior failed attempts comprise comments after code in most recent on top order.
-//     The code is a simple physics engine that simulates bouncing balls in a 2D space.
-//     The code uses HTML5 canvas to render the balls and their movements.
-//     The code is written in JavaScript and uses the 'requestAnimationFrame' function to create a smooth animation.
+let friction = 0.1;
 
+class Vector{
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext("2d");
+    add(v){
+        return new Vector(this.x+v.x, this.y+v.y);
+    }
 
-let LEFT, UP, RIGHT, DOWN;
+    subtr(v){
+        return new Vector(this.x-v.x, this.y-v.y);
+    }
 
-class Ball {                        // *** class Ball Begin ***
-    constructor(x, y, r)
-    {
+    mag(){
+        return Math.sqrt(this.x**2 + this.y**2)
+    }
+
+    mult(n){
+        return new Vector(this.x*n, this.y*n);
+    }
+
+    normalVector(){
+        return new Vector(-this.y, this.x).unitizeVector();
+    }
+
+    unitizeVector(){
+        if(this.mag() === 0) {return new Vector(0,0);}
+        else{return new Vector(this.x/this.mag(), this.y/this.mag());}       
+    }
+
+    static dotProduct(v1,v2){
+        return v1.x*v2.x + v1.y*v2.y;
+    }
+
+    drawVector(start_x, start_y, n, color){
+        drawA.beginPath();
+        drawA.moveTo(start_x, start_y);
+        drawA.lineTo(start_x + this.x*n , start_y + this.y*n );     //  I used 50 instead of 100 here
+        drawA.strokeStyle = color;
+        drawA.stroke();
+        drawA.closePath();
+    }
+}
+
+//--- code below added from coPilot code: ----------------------------- // |
+
+class InputHandler {                                                    // |
+    constructor() {                                                     // |
+        this.Left  = false;                                             // |
+        this.Right = false;                                             // |
+        this.Up    = false;                                             // |
+        this.Down  = false;                                             // |
+                                                                        // |
+        document.addEventListener("keydown", (e) => this.keyDown(e));   // |
+        document.addEventListener("keyup",   (e) => this.keyUp(e));     // |
+    }                                                                   // |
+                                                                        // |         
+    keyDown(e) {                                                        // |
+        if (e.key === "ArrowLeft")  this.Left  = true;                  // |
+        if (e.key === "ArrowRight") this.Right = true;                  // |
+        if (e.key === "ArrowUp")    this.Up    = true;                  // |
+        if (e.key === "ArrowDown")  this.Down  = true;                  // |
+    }                                                                   // |
+                                                                        // |
+    keyUp(e) {                                                          // |
+        if (e.key === "ArrowLeft")  this.Left  = false;                 // |
+        if (e.key === "ArrowRight") this.Right = false;                 // |
+        if (e.key === "ArrowUp")    this.Up    = false;                 // |
+        if (e.key === "ArrowDown")  this.Down  = false;                 // |
+    }                                                                   // |
+}
+const input = new InputHandler();                                       // |
+                                                                        // |
+//--- code above added from coPilot code: ----------------------------- // |
+
+class Ball {
+    constructor(x, y, r){
         this.x = x;
         this.y = y;
         this.r = r;
-    }
-  
-    drawBall()
-    {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.strokeStyle = "black";
-        ctx.stroke();
-        ctx.fillStyle = "yellow";
-        ctx.fill();
+        this.vel = new Vector(0,0);
+        this.acc = new Vector(0,0);
+        this.acceleration = 0.25;
+        this.player = false;
+        BALLZ.push(this);
     }
 
+    drawBall(){
+        drawA.beginPath();
+        drawA.arc(this.x, this.y, this.r, 0, Math.PI * 2);    
+        drawA.strokeStyle = "black";
+        drawA.stroke();
+        drawA.fillStyle = "red";
+        drawA.fill();
+        drawA.closePath();
+    }
+
+    display() {
+        this.vel.drawVector(550,400,50,"green");
+        this.acc.unitizeVector().drawVector(550,400,50,"blue");
+        this.acc.normalVector().drawVector(550,400,50,"red");
+        drawA.beginPath();
+        drawA.arc(550,400,50, 0, Math.PI * 2);    
+        drawA.strokeStyle = "black";
+        drawA.stroke();
+
+    }
+}
+//--this code block added from coPilot code: ----------- // |                                                     // |
+//                                                       // |
+function setupControls() {                               // |
+    document.addEventListener("keydown", function(e) {   // |
+        if (e.key === "ArrowLeft")  Left = true;         // |
+        if (e.key === "ArrowRight") Right = true;        // |
+        if (e.key === "ArrowUp")    Up = true;           // |
+        if (e.key === "ArrowDown")  Down = true;         // |
+    });                                                  // |
+                                                         // |
+    document.addEventListener("keyup", function(e) {     // |
+        if (e.key === "ArrowLeft")  Left = false;        // |
+        if (e.key === "ArrowRight") Right = false;       // |
+        if (e.key === "ArrowUp")    Up = false;          // |
+        if (e.key === "ArrowDown")  Down = false;        // |
+    });                                                  // |
+}                                                        // | 
+//                                                       // |
+function keyControl(b, input) {                          // |
+                                                         // |
+    if (input.Left){b.acc.x = -b.acceleration};          // | 
+    if (input.Right){b.acc.x =  b.acceleration};         // |
+    if (!input.Left && !input.Right){b.acc.x = 0};       // |
+                                                         // |
+    if (input.Up)    {b.acc.y = -b.acceleration};        // |
+    if (input.Down)  {b.acc.y =  b.acceleration};        // |
+    if (!input.Up && !input.Down) {b.acc.y = 0};         // |
+
+    b.vel = b.vel.add(b.acc);                            // |
+    b.vel = b.vel.mult(1.00001 - friction);              // |
+
+    b.x += b.vel.x;                                      // |
+    b.y += b.vel.y;                                      // |
+}                                                        // |
+
+//---above code added from coPilot code ---------------- // |
+
+function mainLoop() {
+    drawA.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+
+    BALLZ.forEach((b) => {
+        b.drawBall();
+        if (b.player) keyControl(b, input);
+        b.display();
+    });
+
+    requestAnimationFrame(mainLoop);
 }
 
-function keyControl(b)
+$(document).ready(function()
 {
-    canvas.addEventListener('keydown', function(e)
-        {
-            if(e.keyCode === 37){LEFT = true;}
-            if(e.keyCode === 38){UP = true}
-            if(e.keyCode === 39){RIGHT = true;}
-            if(e.keyCode === 40){DOWN = true;}
+    $('#title').text('Video 06 - Unit Vectors Dot Products');
+    $('#html_ver').text('html ver 08');
+    $('#js_ver').text('JS ver 08');
     
-                        // Note that 'e.keycode' is deprecated.  
-                        // Here is an alternative approach using the 'key' property.
-                        // 
-                        //       let fdhCharcode = e.key.charCodeAt();
-                        //       console.log("fdhCharcode =", fdhCharcode);
-                        // 
-    })
+    let Ball1 = new Ball(200, 200, 20);
 
-    canvas.addEventListener('keyup', function(e)    
-        {
-            if(e.keyCode === 37){LEFT = false;}
-            if(e.keyCode === 38){UP = false}
-            if(e.keyCode === 39){RIGHT = false;}
-            if(e.keyCode === 40){DOWN = false;}
-    })
+    Ball1.player = true;
 
-    if (LEFT){b.x--;}
-    if (UP){b.y--;}
-    if (RIGHT){b.x++;}
-    if (DOWN){b.y++;}
+    setupControls();
 
+    requestAnimationFrame(mainLoop);
     
-}                                   // *** ball Class End ***
+})
 
-function mainLoop()
-    {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        keyControl(Ball2); 
-        Ball1.drawBall();
-        Ball2.drawBall();
-        requestAnimationFrame(mainLoop);
-    }
 
-let Ball1 = new Ball(100, 100, 15);
-                                    // let Ball1 = new Ball(canvas.width/2, canvas.height/2, 15);
-let Ball2 = new Ball(150, 150, 10);
 
-requestAnimationFrame(mainLoop);
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-// code executes as expeted.  Coded up to Video 3 at 6:18
-
-// ***************             End of code for attempt 2.12.             ******************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const canvas = document.querySelector("canvas");
-// const ctx = canvas.getContext("2d");
-// const twoTT = 2*Math.PI; // note: I use the variable 'TT' to store 2*Pi
-// const BALLZ = [];
-
-// let LEFT, UP, RIGHT, DOWN;
-// let friction = 0.1;
-
-// class Vector{              // *** class Vector Begin ***
-//   constructor(x, y){
-//       this.x = x;
-//       this.y = y; 
-//   }
-
-//   add(v){
-//     return new Vector(this.x + v.x, this.y + v.y);
-//   }
-
-//   subtr(v){
-//     return new Vector(this.x - v.x, this.y - v.y);
-//   }
-
-//   mag(){
-//     return Math.sqrt(this.x**2 + this.y**2);
-//   }
-
-//   mult(n){
-//     return new Vector(this.x*n, this.y*n);
-//   }
-// }                        //  *** class Vector End ***
-
-// class Ball{              // *** class Ball Begin ***
-//   constructor(x,y,r){
-//     this.x = x;
-//     this.y = y;
-//     this.r = r;
-//     this.vel = new Vector(0,0);
-//     this.acc = new Vector(0,0);
-//     this.acceleration = 0.1;
-//     this.player = false;
-//     BALLZ.push(this);
-//   }
-
-//   drawBall (){        // drawBall method of class Ball start
-//     ctx.beginPath();
-//     ctx.arc(this.x, this.y, this.r, 0, twoTT);
-//     ctx.strokeStyle = "black";
-//     ctx.stroke();
-//     ctx.fillStyle = "purple";
-//     ctx.fill();
-//   }                   // drawBall method of class Ball end
-
-//   display(){
-//     ctx.beginPath();
-//     ctx.moveTo(this.x, this.y);
-//     ctx.lineTo(this.x + this.acc_x*500, this.y + this.acc_y*500);
-//     ctx.strokeStyle = "green";
-//     ctx.stroke();
-
-//     ctx.beginPath();
-//     ctx.moveTo(this.x, this.y);
-//     ctx.lineTo(this.x + this.vel_x*50, this.y + this.vel_y*50);
-//     ctx.strokeStyle = "blue";
-//     ctx.stroke();
-
-//   }
-// }                        //  *** class Ball End ***
-
-// function keyControl(b){         // *** function keyControl Begin ***
-
-//   canvas.addEventListener('keydown', function(e){       //  *** keyDown listener Begin ***
-
-//       let fdhIcode = e.key.charCodeAt();
-
-//             // // console.log("fdhIcode =", fdhIcode);
-
-//       if(fdhIcode == 115){LEFT = true;}
-
-//       if(fdhIcode == 99){DOWN = true;}
-
-//       if(fdhIcode == 101){UP = true;}
-        
-//       if(fdhIcode == 102){RIGHT = true;}
-        
-//     }
-//   );                                                    // *** keyDown listener  End ***
-
-// canvas.addEventListener('keyup', function(e){     // *** keyUp listener Begin ***
-//    let fdhIcode = e.key.charCodeAt();
-
-//      if (fdhIcode == 115){LEFT = false;}
-       
-//      if (fdhIcode == 99){DOWN = false;}
-
-//      if (fdhIcode == 101){UP = false;}
-
-//      if (fdhIcode == 102){RIGHT = false;}
-//     }
-// );                                                // *** keyUp listener End ***
-
-//       if (LEFT){
-//         b.acc.x = -b.acceleration;
-//       }
-
-//       if (UP){
-//         b.acc.y = -b.acceleration;
-//       }
-
-//       if (RIGHT){
-//         b.acc.x = b.acceleration;
-//       }
-
-//       if (DOWN){
-//         b.acc.y = b.acceleration;
-//       }
-
-//       if(!LEFT && !RIGHT){
-//         b.acc.x = 0;
-//       }
-  
-//     if(!UP && !DOWN){
-//       b.acc.y = 0;
-//     }
-
-//     b.vel = b.vel.add(b.acc);
-//     b.vel = b.vel.mult(1-friction);
-//     b.x += b.vel.x;
-//     b.y += b.vel.y;
-
-// }                               // *** function keyControl End ***
-    
-//     function mainLoop() {       // *** function mainLoop Begin ***
-//       ctx.clearRect(0,0,canvas.clientHeight, canvas.clientWidth);
-//       BALLZ.forEach((b) => {
-//         b.drawBall();
-//         if (b.player){
-//           keyControl(b);
-//         }
-//         b.display();
-//       });
-//       requestAnimationFrame(mainLoop);
-//     }                           // *** function mainLoop End ***
-
-//     let Ball1 = new Ball(canvas.width/2, canvas.height/2, 15);
-//     // let Ball2 = new Ball(300, 400, 20);
-
-//     Ball1.player = true;
-//     // Ball2.player = false;
-
-//     requestAnimationFrame(mainLoop);
-
-// end of code for initial attempt.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //   scratch code
-//     // console.log("fdhIcode =", fdhIcode);
-//     //  console.log(fdhIcode);
-
-//       //
-//       // Add a rectangle at (10, 10) with size 100x100 pixels
-//       // ctx.fillRect(10, 10, 100, 100);
-//       //
-
-//       // console.log(text);
-//       //  console.log();
-//       // console.log("x = ",x);
-//       // console.log("y = ", y);
-//       // console.log();
-//       // console.log();
-//       // console.log("e.key.charCodeAt():");
-//       // console.log(fdhIcode);
-//       // console.log();   
-//       //   console.log();
-//       //   console.log("Key:  ");
-//       // console.log(e.key);
-//       //   console .log();
-//       //   console.log("Code:  ");
-//       // console.log(e.code);
-//       //   console.log();
-//       //   console.log("charCode:  ");
-//       // console.log(e.key.charCodeAt()); 
-//       //   console.log();
-//       //   console.log();
-
-//       //   let text = e.key;
-//       //   let fdhIcode = e.key.charCodeAt();
-//       // console.log(e.code.charCodeAt());
-//       // console.log();
-//       // console.log();
-//   // if (fdhIcode == "100")
-//   //   {
-//   //      console.log("d => NONE");
-//   //   }
-
-//   //   if (fdhIcode == "101")
-//   //   {
-//   //        console.log("e => UP");
-//   //       y--;
-//   //   }
-
-//   // if (fdhIcode == "99")
-//   //   {
-//   //      console.log("c => DOWN");
-//   //     y++;
-//   //   }
-
-//   // if (fdhIcode == "115")
-//   //   {
-//   //     console.log("s => LEFT");
-  
-//   //    x--;
-//   //   }
-    
-//   // if (fdhIcode == "102")
-//   //   {
-//   //    console.log("f => RIGHT");
-//   //   x++;
-//   //   }
 
 

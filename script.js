@@ -173,11 +173,12 @@ function mainLoop() {
 
 $(document).ready(function()
 {
-    $('#title').text('Video 06 - Unit Vectors Dot Products');
-    $('#html_ver').text('html ver 08');
-    $('#js_ver').text('JS ver 08');
+    $('#title').text('Video 07 - Ball Ball Collisions');
+    $('#code_ver').text('html ver 46 * * * JS ver 46');
     
-    let Ball1 = new Ball(200, 200, 20);
+    let Ball1 = new Ball(200, 200, 30);
+
+    let Ball2 = new Ball(300, 250, 40);
 
     Ball1.player = true;
 

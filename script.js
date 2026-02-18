@@ -28,7 +28,7 @@ class Vector{
     }
 
     mag(){
-        return Math.sqrt(this.x**2 + this.y**2)
+        return Math.sqrt(this.x**2 + this.y**2);
     }
 
     mult(n){
@@ -91,8 +91,7 @@ const input = new InputHandler();                                       // |
 
 class Ball {
     constructor(x, y, r){
-        this.x = x;
-        this.y = y;
+        this.position = new Vector(x,y);
         this.r = r;
         this.vel = new Vector(0,0);
         this.acc = new Vector(0,0);
@@ -103,7 +102,7 @@ class Ball {
 
     drawBall(){
         drawA.beginPath();
-        drawA.arc(this.x, this.y, this.r, 0, Math.PI * 2);    
+        drawA.arc(this.position.x, this.position.y, this.r, 0, Math.PI * 2);    
         drawA.strokeStyle = "black";
         drawA.stroke();
         drawA.fillStyle = "red";
@@ -115,6 +114,7 @@ class Ball {
         this.vel.drawVector(550,400,50,"green");
         this.acc.unitizeVector().drawVector(550,400,50,"blue");
         this.acc.normalVector().drawVector(550,400,50,"red");
+
         drawA.beginPath();
         drawA.arc(550,400,50, 0, Math.PI * 2);    
         drawA.strokeStyle = "black";
@@ -149,39 +149,44 @@ function keyControl(b, input) {                          // |
     if (input.Up)    {b.acc.y = -b.acceleration};        // |
     if (input.Down)  {b.acc.y =  b.acceleration};        // |
     if (!input.Up && !input.Down) {b.acc.y = 0};         // |
-
+                                                         // |
+    b.acc = b.acc.unitizeVector().mult(b.acceleration);  // |
     b.vel = b.vel.add(b.acc);                            // |
     b.vel = b.vel.mult(1.00001 - friction);              // |
-
-    b.x += b.vel.x;                                      // |
-    b.y += b.vel.y;                                      // |
+    b.position = b.position.add(b.vel);                  // |
 }                                                        // |
+                                                         // |
+// ----------- some code above added by coPilot -------- // |
 
-//---above code added from coPilot code ---------------- // |
+let distanceVector = new Vector (0,0);
 
-function mainLoop() {
+function mainLoop(timestamp) {
     drawA.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
-
     BALLZ.forEach((b) => {
         b.drawBall();
-        if (b.player) keyControl(b, input);
+        if (b.player){
+            keyControl(b, input);
+        }
         b.display();
     });
 
+    distanceVector = Ball2.position.subtr(Ball1.position);
+    drawA.fillText("Distance: "+distanceVector.mag(), 500, 330);
     requestAnimationFrame(mainLoop);
 }
+
+    let Ball1 = new Ball(200, 200, 30);
+
+    let Ball2 = new Ball(300, 250, 40); 
+
+    Ball1.player = true;
+
 
 $(document).ready(function()
 {
     $('#title').text('Video 07 - Ball Ball Collisions');
     $('#code_ver').text('html ver 46 * * * JS ver 46');
     
-    let Ball1 = new Ball(200, 200, 30);
-
-    let Ball2 = new Ball(300, 250, 40);
-
-    Ball1.player = true;
-
     setupControls();
 
     requestAnimationFrame(mainLoop);

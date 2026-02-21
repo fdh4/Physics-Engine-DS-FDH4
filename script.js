@@ -58,7 +58,7 @@ class Vector{
     }
 }
 
-//--- code below added from coPilot code: ----------------------------- // |
+//--- code below added from Copilot code: ----------------------------- // |
 
 class InputHandler {                                                    // |
     constructor() {                                                     // |
@@ -87,7 +87,7 @@ class InputHandler {                                                    // |
 }
 const input = new InputHandler();                                       // |
                                                                         // |
-//--- code above added from coPilot code: ----------------------------- // |
+//--- code above added from Copilot code: ----------------------------- // |
 
 class Ball {
     constructor(x, y, r){
@@ -113,16 +113,15 @@ class Ball {
     display() {
         this.vel.drawVector(550,400,50,"green");
         this.acc.unitizeVector().drawVector(550,400,50,"blue");
-        this.acc.normalVector().drawVector(550,400,50,"red");
+        //this.acc.normalVector().drawVector(550,400,50,"red");
 
         drawA.beginPath();
         drawA.arc(550,400,50, 0, Math.PI * 2);    
         drawA.strokeStyle = "black";
         drawA.stroke();
-
     }
 }
-//--this code block added from coPilot code: ----------- // |                                                     // |
+//---- some code below added from Copilot code: ----------- // |                                                     // |
 //                                                       // |
 function setupControls() {                               // |
     document.addEventListener("keydown", function(e) {   // |
@@ -156,9 +155,30 @@ function keyControl(b, input) {                          // |
     b.position = b.position.add(b.vel);                  // |
 }                                                        // |
                                                          // |
-// ----------- some code above added by coPilot -------- // |
+// ----------- some code above added by Copilot -------- // |
 
-let distanceVector = new Vector (0,0);
+
+function decimalPlaces(number,precision){
+    let factor = 10**precision;
+    return Math.round(number*factor) / factor;
+}
+
+function collisionDetectionBB(b1, b2){
+    if(b1.r + b2.r >= b2.position.subtr(b1.position).mag()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+function penetrationResponseBB(b1, b2){
+    let bbDistance = b1.position.subtr(b2.position);
+    let penetrationDepth = b1.r + b2.r - bbDistance.mag();
+    let penetrationCorrection = bbDistance.unitizeVector().mult(penetrationDepth/2);
+    b1.position = b1.position.add(penetrationCorrection);  // I used penetration Correction in place of pen_res
+    b2.position = b2.position.add(penetrationCorrection.mult(-1));
+}
 
 function mainLoop(timestamp) {
     drawA.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
@@ -170,22 +190,21 @@ function mainLoop(timestamp) {
         b.display();
     });
 
-    distanceVector = Ball2.position.subtr(Ball1.position);
-    drawA.fillText("Distance: "+distanceVector.mag(), 500, 330);
+    if(collisionDetectionBB(Ball1, Ball2)){
+        penetrationResponseBB(Ball1, Ball2);
+    }
     requestAnimationFrame(mainLoop);
 }
 
     let Ball1 = new Ball(200, 200, 30);
-
     let Ball2 = new Ball(300, 250, 40); 
-
     Ball1.player = true;
 
 
 $(document).ready(function()
 {
     $('#title').text('Video 07 - Ball Ball Collisions');
-    $('#code_ver').text('html ver 46 * * * JS ver 46');
+    $('#code_ver').text('html ver 39 * * * JS ver 39');
     
     setupControls();
 
